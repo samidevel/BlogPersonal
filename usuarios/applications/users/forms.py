@@ -1,119 +1,94 @@
 from django import forms
 from django.contrib.auth import authenticate
-
+#
 from .models import User
 
 class UserRegisterForm(forms.ModelForm):
 
-    password1 = forms.CharField(label='Contraseña', 
-    required=True,
-    widget=forms.PasswordInput(
-        attrs={
-            'placeholder':'Contraseña'
-        }
-    ))
-
-    password2 = forms.CharField(label='Contraseña', 
-    required=True,
-    widget=forms.PasswordInput(
-        attrs={
-            'placeholder':'Repetir contraseña'
-        }
-    ))
-
+    password1 = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña'
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Repetir Contraseña'
+            }
+        )
+    )
 
     class Meta:
+        """Meta definition for Userform."""
 
         model = User
         fields = (
-            'username',
             'email',
-            'nombres',
-            'apellidos',
+            'full_name',
+            'ocupation',
             'genero',
-
+            'date_birth',
         )
-
+    
     def clean_password2(self):
         if self.cleaned_data['password1'] != self.cleaned_data['password2']:
-            self.add_error('password2', 'Las cotraseñas no son iguales')
-    
-    def clean_password1_password2(self):
-        if self.cleaned_data['password1'] <=6 and self.cleaned_data['password2'] <=6:
-            self.add_error('Las contraseña menor a 6 caracteres')
-
+            self.add_error('password2', 'Las contraseñas no son iguales')
 
 
 class LoginForm(forms.Form):
-
-    username = forms.CharField(
-        label='username', 
+    email = forms.CharField(
+        label='E-mail',
         required=True,
         widget=forms.TextInput(
-        attrs={
-            'placeholder':'Contraseña'
-        }
-    ))
-
-    password = forms.CharField(label='Contraseña', 
+            attrs={
+                'placeholder': 'Correo Electronico',
+            }
+        )
+    )
+    password = forms.CharField(
+        label='Contraseña',
         required=True,
         widget=forms.PasswordInput(
-        attrs={
-            'placeholder':'contraseña'
-        }
-    ))
-
+            attrs={
+                'placeholder': 'contraseña'
+            }
+        )
+    )
 
     def clean(self):
         cleaned_data = super(LoginForm, self).clean()
-        username = self.cleaned_data['username'] 
-        password =  self.cleaned_data['password']
-        
-        if not authenticate(username=username, password=password):
-            raise forms.ValidationError('no son correctos los datos del usaurio')
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
 
-        return self.cleaned_data
+        if not authenticate(email=email, password=password):
+            raise forms.ValidationError('Los datos de usuario no son correctos')
         
+        return self.cleaned_data
 
 
 class UpdatePasswordForm(forms.Form):
 
     password1 = forms.CharField(
-    label='Contraseña', 
-    required=True,
-    widget=forms.PasswordInput(
-        attrs={
-            'placeholder':'Contraseña actual'
-        }
-    ))
-
-    password2 = forms.CharField(label='Contraseña', 
-    required=True,
-    widget=forms.PasswordInput(
-        attrs={
-            'placeholder':'Contraseña nueva'
-        }
-    ))
-
-
-
-    
-class VerificacionForm(forms.Form):
-    codregistro = forms.CharField(required=True)
-
-    def __init__(self, pk, *args, **kwargs):
-        self.id_user = pk
-        super(VerificacionForm, self).__init__(*args, **kwargs)
-
-    def clean_codregistro(self):
-        codigo = self.cleaned_data['codregistro']
-
-        if len(codigo) == 6:
-            activo=  User.objects.cod_validation(
-                self.id_user,
-                codigo
-            )
-            if not activo:
-                raise forms.ValidationError('Codigo incorrecto')
-        else:
-            raise forms.ValidationError('no son correctos los datos del usaurio')
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña Actual'
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña Nueva'
+            }
+        )
+    )

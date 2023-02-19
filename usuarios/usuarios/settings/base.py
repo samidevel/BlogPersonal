@@ -55,8 +55,14 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     'applications.users',
+    'applications.home',
+    'applications.entrada',
+    'applications.favoritos',
+    
 )
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'ckeditor',
+    )
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 
@@ -125,3 +131,4 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
