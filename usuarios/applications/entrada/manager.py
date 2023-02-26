@@ -24,3 +24,19 @@ class EntryManager(models.Manager):
             
 
         ).order_by('-create_date')[:6]
+    
+    def buscar_entrada(self, kword, categoria):
+        #buscar entradas por cateegoria o palabra clave
+
+        if len(categoria) >0:
+            return self.filter(
+                category__short_name=categoria,
+                title__icontains=kword,
+                public=True
+            ).order_by('-create_date')
+        else:
+
+            return self.filter(
+                title__icontains=kword,
+                public=True
+            ).order_by('-create_date')

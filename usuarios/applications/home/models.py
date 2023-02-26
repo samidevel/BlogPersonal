@@ -1,8 +1,6 @@
 from django.db import models
 
 
-
-
 class Home(models.Model):
     title = models.CharField('Nombre', max_length=30)
     description = models.TextField()
@@ -13,19 +11,13 @@ class Home(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     update_create = models.DateField(auto_now=True)
 
-
     class Meta:
         verbose_name = 'pagina Principal'
         verbose_name_plural = 'pagina Principal'
 
-        def __str__(self):
-            return self.title   
-    
-
-
-
-
-        
+    def __str__(self):
+        return self.title   
+            
 class Subscribers(models.Model):
     email = models.EmailField()
     create_date = models.DateTimeField(auto_now_add=True)

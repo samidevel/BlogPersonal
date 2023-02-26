@@ -1,5 +1,9 @@
+from datetime import timedelta, datetime
+
 from django.db import models
 from django.conf import settings
+
+from django.template.defaultfilters import slugify
 
 #from ckeditor_uploader.fields import RichTextFieldRichTextUploadingField
 from ckeditor.fields import RichTextField
@@ -58,3 +62,16 @@ class Entry(models.Model):
     def __str__(self):
         return self.title
 
+
+
+    def save(self, *args, **kwargs):
+        now = datetime.now()
+        total_time = timedelta(
+            hours=now.hour,
+            minutes=now.minute,
+            seconds=now.second
+        )
+        seconds =  int(total_time.total_seconds())
+        sluge_unique = '%s %s' % (self.title, str(seconds))
+        self.slug = slugify(sluge_unique)
+        super(Entry, self).save(*args, **kwargs)
